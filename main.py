@@ -2,7 +2,34 @@ import os, time, argparse, requests
 from datetime import datetime
 print("Start skryptu")
 BINANCE = "https://api.binance.com"  # spot
+# Zamiast jednej domeny używamy kilku „mirrorów” Binance:
+BINANCE_BASES = [
+    "https://api.binance.com",
+    "https://api1.binance.com",
+    "https://api2.binance.com",
+    "https://api3.binance.com",
+    "https://api-gcp.binance.com",
+]
 
+import requests
+
+def binance_get(path, params=None, timeout=10):
+    """
+    Próbuje pobrać JSON z /api/v3/... po kolei z wielu bazowych domen.
+    Zwraca r.json() lub rzuca ostatni błąd jeśli nic nie zadziałało.
+    """
+    last_err = None
+    for base in BINANCE_BASES:
+        url = f"{base}{path}"
+        try:
+            r = requests.get(url, params=params, timeout=timeout)
+            r.raise_for_status()
+            return r.json()
+        except Exception as e:
+            last_err = e
+            # próbujemy następny mirror
+            continue
+    raise last_err
 # ======= PARAMS from env (z sensownymi defaultami) =======
 TG_BOT_TOKEN = os.getenv("TG_BOT_TOKEN", "")
 TG_CHAT_ID   = os.getenv("TG_CHAT_ID", "")
