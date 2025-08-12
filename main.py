@@ -1,6 +1,6 @@
 import os, time, argparse, requests
 from datetime import datetime
-
+print("Start skryptu")
 BINANCE = "https://api.binance.com"  # spot
 
 # ======= PARAMS from env (z sensownymi defaultami) =======
@@ -11,7 +11,8 @@ MIN_24H_QUOTE       = float(os.getenv("MIN_24H_QUOTE", "1500000"))  # min USDC o
 BREAKOUT_LOOKBACK   = int(os.getenv("BREAKOUT_LOOKBACK", "20"))
 VOLUME_SPIKE_MULT   = float(os.getenv("VOLUME_SPIKE_MULT", "1.8"))
 SCAN_EVERY_SEC      = int(os.getenv("SCAN_EVERY_SEC", "300"))  # tylko gdy nie one-shot
-
+print("Łączenie z Binance...")
+print("Wysyłanie wiadomości do Telegrama...")
 # ======= Telegram =======
 def tg_send(text: str):
     if not TG_BOT_TOKEN or not TG_CHAT_ID:
@@ -128,3 +129,4 @@ if __name__ == "__main__":
         while True:
             scan_once()
             time.sleep(SCAN_EVERY_SEC)
+print("Koniec skryptu")
