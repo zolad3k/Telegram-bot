@@ -1,0 +1,30 @@
+name: Scan Binance & Alert TG
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"   # uruchom co 10 minut
+  workflow_dispatch:        # pozwala odpalić ręcznie
+
+jobs:
+  run-scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: Run scanner (one-shot)
+        env:
+          TG_BOT_TOKEN: ${{ secrets.TG_BOT_TOKEN }}
+          TG_CHAT_ID:   ${{ secrets.TG_CHAT_ID }}
+          CANDLE_INTERVAL: "4h"
+          MIN_24H_QUOTE: "1500000"
+          BREAKOUT_LOOKBACK: "20"
+          VOLUME_SPIKE_MULT: "1.8"
+        run: |
+          python -u main.py --one-shot
