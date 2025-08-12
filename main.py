@@ -130,3 +130,16 @@ if __name__ == "__main__":
             scan_once()
             time.sleep(SCAN_EVERY_SEC)
 print("Koniec skryptu")
+import os, requests
+from datetime import datetime
+
+TG_BOT_TOKEN = os.getenv("TG_BOT_TOKEN")
+TG_CHAT_ID   = os.getenv("TG_CHAT_ID")
+
+def tg_send(text):
+    url = f"https://api.telegram.org/bot{TG_BOT_TOKEN}/sendMessage"
+    r = requests.post(url, json={"chat_id": TG_CHAT_ID, "text": text, "disable_web_page_preview": True})
+    r.raise_for_status()
+
+tg_send(f"✅ Actions działa. Czas: {datetime.utcnow().isoformat()}Z")
+print("Wiadomość wysłana.")
