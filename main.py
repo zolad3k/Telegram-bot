@@ -5,7 +5,9 @@ import os, time, hmac, hashlib, logging, urllib.parse
 from datetime import datetime, timezone
 from typing import List, Dict, Tuple, Optional
 import requests
-
+git add main.py
+git commit -m "Remove exchangeInfo to fix 451 error"
+git push
 # ===== Logi =====
 logging.basicConfig(level=os.environ.get("LOG_LEVEL","INFO"),
                     format="%(asctime)s | %(levelname)s | %(message)s")
